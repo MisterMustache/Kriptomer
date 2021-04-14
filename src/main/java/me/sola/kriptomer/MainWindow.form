@@ -12,18 +12,19 @@
             <MenuItem class="javax.swing.JMenuItem" name="dodajValuto">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Dodaj novo valuto"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dodajValutoActionPerformed"/>
+              </Events>
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="urediValuto">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Uredi obstoje&#x10d;o valuto"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="test1">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="test"/>
+                    <Property name="text" type="java.lang.String" value="placeholder"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="test1ActionPerformed"/>
@@ -36,8 +37,10 @@
             <MenuItem class="javax.swing.JMenuItem" name="odstraniValuto">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Odstrani obstoje&#x10d;o valuto"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="odstraniValutoActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -48,6 +51,9 @@
           <SubComponents>
             <Menu class="javax.swing.JMenu" name="spremeniProfil">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/me/sola/kriptomer/resources/menu_icons/edit_thumb.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Spremeni aktiven profil"/>
               </Properties>
             </Menu>
@@ -55,6 +61,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="dodajProfil">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/me/sola/kriptomer/resources/menu_icons/add_thumb.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Ustvari nov profil"/>
               </Properties>
               <Events>
@@ -63,8 +72,14 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="odstraniProfil">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/me/sola/kriptomer/resources/menu_icons/delete_thumb.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Odstrani obstoje&#x10d;i profil"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="odstraniProfilActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

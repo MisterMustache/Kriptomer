@@ -7,12 +7,14 @@ package me.sola.kriptomer;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,16 +28,16 @@ import org.json.simple.parser.ParseException;
  *
  * @author TheGoodSpice
  */
-public class AddProfile extends javax.swing.JFrame {
+public class DeleteProfile extends javax.swing.JFrame {
 
     /**
-     * Creates new form AddProfile
-     */    
+     * Creates new form DeleteProfile
+     */
     MainWindow mainWindow;
-    public AddProfile(Object mainWindow) {
+    public DeleteProfile(Object mainWindow) {
         this.mainWindow = (MainWindow) mainWindow;
         initComponents();
-        
+        populirajTabelo();
     }
 
     /**
@@ -50,30 +52,29 @@ public class AddProfile extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         naslov = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        shrani = new javax.swing.JButton();
+        izbrisi = new javax.swing.JButton();
         preklici = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         ime_tekst = new javax.swing.JLabel();
-        fiat_tekst = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        ime_profila = new javax.swing.JTextField();
-        fiat_valuta = new javax.swing.JComboBox<>();
+        profili = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         naslov.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        naslov.setText("Dodajanje novega profila");
+        naslov.setText("Odstranjevanje obstoječega profila");
+        naslov.setMinimumSize(new java.awt.Dimension(200, 32));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(107, 107, 107)
-                .addComponent(naslov)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addComponent(naslov, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,12 +86,12 @@ public class AddProfile extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        shrani.setBackground(new java.awt.Color(102, 153, 255));
-        shrani.setForeground(new java.awt.Color(255, 255, 255));
-        shrani.setText("Shrani");
-        shrani.addActionListener(new java.awt.event.ActionListener() {
+        izbrisi.setBackground(new java.awt.Color(102, 153, 255));
+        izbrisi.setForeground(new java.awt.Color(255, 255, 255));
+        izbrisi.setText("Izbriši");
+        izbrisi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shraniActionPerformed(evt);
+                izbrisiActionPerformed(evt);
             }
         });
 
@@ -109,7 +110,7 @@ public class AddProfile extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(shrani)
+                .addComponent(izbrisi)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(preklici)
                 .addContainerGap())
@@ -119,7 +120,7 @@ public class AddProfile extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(shrani)
+                    .addComponent(izbrisi)
                     .addComponent(preklici))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
@@ -128,11 +129,8 @@ public class AddProfile extends javax.swing.JFrame {
         jPanel5.setAlignmentX(0.0F);
         jPanel5.setAlignmentY(0.0F);
 
-        ime_tekst.setText("Ime profila:");
+        ime_tekst.setText("Profil:");
         ime_tekst.setPreferredSize(new java.awt.Dimension(63, 24));
-
-        fiat_tekst.setText("Fiat valuta profila:");
-        fiat_tekst.setPreferredSize(new java.awt.Dimension(99, 24));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -140,26 +138,18 @@ public class AddProfile extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ime_tekst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fiat_tekst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(ime_tekst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ime_tekst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fiat_tekst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        ime_profila.setText("Moj profil");
-
-        fiat_valuta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EUR - Euro (€)", "USD - Ameriški dolar ($)", "GBP - Britanski funt (£)" }));
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -167,19 +157,15 @@ public class AddProfile extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ime_profila, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(fiat_valuta, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(profili, 0, 365, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ime_profila, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fiat_valuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addComponent(profili, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(176, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -244,134 +230,101 @@ public class AddProfile extends javax.swing.JFrame {
         
     }
     
-    private void shraniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shraniActionPerformed
-        
-        System.out.println("> Ustvarjanje novega profila");
-        
-        String ime = ime_profila.getText();
-        String fiat_ = fiat_valuta.getItemAt(fiat_valuta.getSelectedIndex());
-        
-        String fiat;
-        switch(fiat_){
-            case "EUR - Euro (€)":
-                fiat = "eur";
-                break;
-            case "USD - Ameriški dolar ($)":
-                fiat = "usd";
-                break;
-            case "GBP - Britanski funt (£)":
-                fiat = "gbp";
-                break;
-            default:
-                fiat = "napaka";
-                throw new RuntimeException("Izbran neznan fiat simbol");
-        }
-        
-        System.out.println(ime + " " + fiat);
-        
-        JSONParser jsonParser = new JSONParser();
-
+    private void izbrisiActionPerformed(java.awt.event.ActionEvent evt) {   
+    
         try {
-            FileReader reader = new FileReader("kriptomer.conf");
-
+            
+            JComboBox<String> profili = this.profili;
+            
+            int selected = profili.getSelectedIndex();
+            
+            JSONParser jsonParser = new JSONParser();
+            
+            FileReader reader = null;
+            try {
+                reader = new FileReader("kriptomer.conf");
+            } catch (FileNotFoundException e) {
+                System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+                usodnaNapaka(e);
+            }
+            
             Object obj = jsonParser.parse(reader);
             JSONObject saved = (JSONObject) obj;
-
-            System.out.println(saved);
-            System.out.println("    ...nalaganje profila");
-
-            JSONArray profili = (JSONArray) saved.get("profili");
             
-            JSONObject nov_profil = new JSONObject();
-            JSONArray valute = new JSONArray();
-                        
-            nov_profil.put("ime", ime);
-            nov_profil.put("valute", valute);
-            nov_profil.put("fiat", fiat);
-                        
-            profili.add(nov_profil);
+            JSONArray jProfili = (JSONArray) saved.get("profili");
             
-            saved.put("profili", profili);
+            jProfili.remove(selected);
+            saved.put("profili", jProfili);
             
             FileWriter newfile = new FileWriter("kriptomer.conf");
+
             newfile.write(saved.toJSONString());
             newfile.flush();
-            
-            System.out.println("    ... finished");
             
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(jPanel3);
             frame.dispose();
             
-            this.mainWindow.restartKriptomer(true);
+            mainWindow.restartKriptomer(true);
             
             Thread.currentThread().stop();
             
-        } catch (java.io.FileNotFoundException e) {
-            System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
-            usodnaNapaka(e);
-        } catch (java.io.IOException e) {
-            System.out.println(">> profile loading error\n    ... IO Excpetion");
-            usodnaNapaka(e);
-        } catch (ParseException e) {
-            System.out.println(">> profile loading error\n    ... Parsing Error. Corrupt File?");
-            usodnaNapaka(e);
+        } catch (IOException | ParseException ex) {
+            Logger.getLogger(DeleteProfile.class.getName()).log(Level.SEVERE, null, ex);
+            usodnaNapaka(ex);
         }
-    }//GEN-LAST:event_shraniActionPerformed
-
-    private void prekliciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prekliciActionPerformed
+        
+    }
+    
+    private void populirajTabelo(){
+        
+        try {
+            
+            JComboBox<String> profili = this.profili;
+            
+            JSONParser jsonParser = new JSONParser();
+            
+            FileReader reader = null;
+            try {
+                reader = new FileReader("kriptomer.conf");
+            } catch (FileNotFoundException e) {
+                System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+                usodnaNapaka(e);
+            }
+            
+            Object obj = jsonParser.parse(reader);
+            JSONObject saved = (JSONObject) obj;
+            
+            JSONArray jProfili = (JSONArray) saved.get("profili");
+            
+            for (int i = 0; i < jProfili.size(); i++){
+                JSONObject p = (JSONObject) jProfili.get(i);
+                profili.addItem(p.get("ime").toString());
+            }
+            
+        } catch (IOException | ParseException ex) {
+            Logger.getLogger(DeleteProfile.class.getName()).log(Level.SEVERE, null, ex);
+            usodnaNapaka(ex);
+        }
+        
+    }
+    
+    private void prekliciActionPerformed(java.awt.event.ActionEvent evt) {                                         
         
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(jPanel3);
         frame.dispose();
         Thread.currentThread().stop();
         
-    }//GEN-LAST:event_prekliciActionPerformed
-
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(AddProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(AddProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(AddProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AddProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AddProfile().setVisible(true);
-//            }
-//        });
-//    }
+    }   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel fiat_tekst;
-    private javax.swing.JComboBox<String> fiat_valuta;
-    private javax.swing.JTextField ime_profila;
     private javax.swing.JLabel ime_tekst;
+    private javax.swing.JButton izbrisi;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JLabel naslov;
     private javax.swing.JButton preklici;
-    private javax.swing.JButton shrani;
+    private javax.swing.JComboBox<String> profili;
     // End of variables declaration//GEN-END:variables
 }

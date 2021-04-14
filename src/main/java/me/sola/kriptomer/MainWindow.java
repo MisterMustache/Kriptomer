@@ -69,15 +69,18 @@ import org.json.simple.parser.ParseException;
  */
 public class MainWindow extends javax.swing.JFrame {
 
-    /*
-     * Global vars
-     */
     /**
      * Creates new form MainWindow
      */
+    
     private final javax.swing.ButtonGroup profili;
     
+//    Dimension d = new java.awt.Dimension(1080, 750);
+//    Point p = new java.awt.Point(10, 10);
+//    MainWindow mainWindow = new MainWindow(d, p);
+    
     public MainWindow(Dimension d, Point p) throws IOException, InterruptedException, InvocationTargetException {
+        
         initComponents();
 
         // "Ročno" popravljeni atributi in GUI stvari (ker NetBeans nima podpore ali ne deluje pravilno)
@@ -380,13 +383,16 @@ public class MainWindow extends javax.swing.JFrame {
         portfelj.setText("Portfelj");
 
         dodajValuto.setText("Dodaj novo valuto");
-        dodajValuto.setEnabled(false);
+        dodajValuto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dodajValutoActionPerformed(evt);
+            }
+        });
         portfelj.add(dodajValuto);
 
         urediValuto.setText("Uredi obstoječo valuto");
-        urediValuto.setEnabled(false);
 
-        test1.setText("test");
+        test1.setText("placeholder");
         test1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 test1ActionPerformed(evt);
@@ -398,17 +404,23 @@ public class MainWindow extends javax.swing.JFrame {
         portfelj.add(jSeparator1);
 
         odstraniValuto.setText("Odstrani obstoječo valuto");
-        odstraniValuto.setEnabled(false);
+        odstraniValuto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                odstraniValutoActionPerformed(evt);
+            }
+        });
         portfelj.add(odstraniValuto);
 
         menu.add(portfelj);
 
         profil.setText("Profil");
 
+        spremeniProfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/me/sola/kriptomer/resources/menu_icons/edit_thumb.png"))); // NOI18N
         spremeniProfil.setText("Spremeni aktiven profil");
         profil.add(spremeniProfil);
         profil.add(jSeparator2);
 
+        dodajProfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/me/sola/kriptomer/resources/menu_icons/add_thumb.png"))); // NOI18N
         dodajProfil.setText("Ustvari nov profil");
         dodajProfil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -417,7 +429,13 @@ public class MainWindow extends javax.swing.JFrame {
         });
         profil.add(dodajProfil);
 
+        odstraniProfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/me/sola/kriptomer/resources/menu_icons/delete_thumb.png"))); // NOI18N
         odstraniProfil.setText("Odstrani obstoječi profil");
+        odstraniProfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                odstraniProfilActionPerformed(evt);
+            }
+        });
         profil.add(odstraniProfil);
 
         menu.add(profil);
@@ -621,7 +639,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void addProfileToMenu(String ime_profila, int index, boolean selected) {
 
-        System.out.println("addProfileToMenu -> " + ime_profila + " " + index + " " + selected);
+        //System.out.println("addProfileToMenu -> " + ime_profila + " " + index + " " + selected);
         
         JRadioButtonMenuItem novProfil = new javax.swing.JRadioButtonMenuItem();
         novProfil.setSelected(selected);
@@ -630,7 +648,7 @@ public class MainWindow extends javax.swing.JFrame {
         profili.add(novProfil);
         
         spremeniProfil.getMenuComponents();
-        System.out.println("velikost spremeniProfil " + spremeniProfil.getMenuComponents().length);
+        //System.out.println("velikost spremeniProfil " + spremeniProfil.getMenuComponents().length);
         
         novProfil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -738,6 +756,7 @@ public class MainWindow extends javax.swing.JFrame {
     int[] valute = {};
     JPanel[] valute_paneli = {};
 
+    // LEGACY
     private void valuteHandler() {
 //        try {
 //
@@ -807,11 +826,31 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_test1ActionPerformed
 
     private void dodajProfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodajProfilActionPerformed
-        
-        AddProfile a = new AddProfile();
+
+        AddProfile a = new AddProfile(this);
         a.setVisible(true);
         
     }//GEN-LAST:event_dodajProfilActionPerformed
+
+    private void odstraniProfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odstraniProfilActionPerformed
+        
+        DeleteProfile r = new DeleteProfile(this);
+        r.setVisible(true);
+        
+    }//GEN-LAST:event_odstraniProfilActionPerformed
+
+    private void dodajValutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodajValutoActionPerformed
+        
+        AddKripto a = new AddKripto(this);
+        a.setVisible(true);
+    }//GEN-LAST:event_dodajValutoActionPerformed
+
+    private void odstraniValutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odstraniValutoActionPerformed
+        
+        DeleteKripto d = new DeleteKripto(this);
+        d.setVisible(true);
+        
+    }//GEN-LAST:event_odstraniValutoActionPerformed
 
     private void adaptSizeChange() {//java.awt.event.ComponentEvent evt){
         //JFrame f5 = (JFrame) SwingUtilities.getRootPane(panel1).getParent();
