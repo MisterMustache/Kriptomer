@@ -6,21 +6,16 @@
 package me.sola.kriptomer;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,30 +25,20 @@ import org.json.simple.parser.ParseException;
  *
  * @author TheGoodSpice
  */
-public class AddKripto extends javax.swing.JFrame {
+public class EditKripto extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AddKripto
+    /*
+     * Creates new form EditKripto
      */
     MainWindow mainWindow;
 
-    public AddKripto(Object mainWindow) {
+    public EditKripto(Object mainWindow) {
         this.mainWindow = (MainWindow) mainWindow;
         initComponents();
-        opozorila.setText("");
-        
-        kriptovaluta.removeAllItems();
-        kriptovaluta.addItem("BTC - Bitcoin");
-        kriptovaluta.addItem("ETH - Ethereum");
-        kriptovaluta.addItem("BCH - Bitcoin Cash");
-        kriptovaluta.addItem("XLM - Stellar Lumens");
-        kriptovaluta.addItem("OMG - OMG Network");
-        kriptovaluta.addItem("ZRX - 0x");
-        kriptovaluta.addItem("XRP - Ripple");
-        kriptovaluta.addItem("LTC - litecoin");
-        
+        populirajTabelo();
+        populirajVnos();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -77,13 +62,15 @@ public class AddKripto extends javax.swing.JFrame {
         kriptovaluta = new javax.swing.JComboBox<>();
         vlozek = new javax.swing.JTextField();
         kolicina = new javax.swing.JTextField();
+        ime_profila = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         naslov.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        naslov.setText("Dodajanje nove valute");
+        naslov.setText("Urejanje obstoječe valute");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -194,15 +181,16 @@ public class AddKripto extends javax.swing.JFrame {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        kriptovaluta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EUR - Euro (€)", "USD - Ameriški dolar ($)", "GBP - Britanski funt (£)" }));
+        kriptovaluta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kriptovalutaActionPerformed(evt);
+            }
+        });
 
         vlozek.setPreferredSize(new java.awt.Dimension(74, 26));
         vlozek.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 vlozekKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                vlozekKeyTyped(evt);
             }
         });
 
@@ -211,10 +199,11 @@ public class AddKripto extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 kolicinaKeyReleased(evt);
             }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                kolicinaKeyTyped(evt);
-            }
         });
+
+        ime_profila.setText("ime profila");
+
+        jLabel2.setText("Urejate profil:");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -225,7 +214,9 @@ public class AddKripto extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(kriptovaluta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(vlozek, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(kolicina, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(kolicina, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ime_profila, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -237,7 +228,11 @@ public class AddKripto extends javax.swing.JFrame {
                 .addComponent(vlozek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(kolicina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ime_profila)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -274,135 +269,176 @@ public class AddKripto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void vlozekKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vlozekKeyTyped
-        //checkIntegrity();
-    }//GEN-LAST:event_vlozekKeyTyped
+    private void kriptovalutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kriptovalutaActionPerformed
+        populirajVnos();
+    }//GEN-LAST:event_kriptovalutaActionPerformed
 
-    private void kolicinaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kolicinaKeyTyped
-        //checkIntegrity();
-//        switch(checkIntegrity()){
-//            case 0:
-//                System.out.println("Ni napak");
-//                break;
-//            case 1:
-//                System.out.println("Napaka pri obeh");
-//                break;
-//            case 2:
-//                System.out.println("Napaka pri kolicini");
-//                break;
-//            case 3:
-//                System.out.println("Napaka pri vlozku");
-//                break;
-//            case 4:
-//                System.out.println("UBER NAPAKA");
-//                break;
-//            default:
-//                System.out.println("UBER NAPAKA 2");
-//        }
-    }//GEN-LAST:event_kolicinaKeyTyped
+    private void populirajVnos() { // Vnese trenutno shranjeno vrednost za izbrano vrednost
 
-    private void kolicinaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_kolicinaKeyReleased
-        checkIntegrity();
-    }//GEN-LAST:event_kolicinaKeyReleased
+        vlozek.setText("test");
 
-    private void vlozekKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_vlozekKeyReleased
-        checkIntegrity();
-    }//GEN-LAST:event_vlozekKeyReleased
-
-    public void usodnaNapaka(Exception e) {
-
-        JOptionPane optionPane = new JOptionPane("Opa! Nekaj je šlo hudo narobe! Stabilnost seje se je porušila. "
-                + "Kriptomer se bo interno znova zagnal! V primeru persistente napake ročno znova zaženite aplikacijo "
-                + "oz. zavrzite konfiguracijsko datoteko.\n\n" + e.getMessage(), JOptionPane.ERROR_MESSAGE);
-        JDialog dialog = optionPane.createDialog("USODNA NAPAKA");
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
-
-        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, e);
-
-        Dimension d = new java.awt.Dimension(1080, 750);
-        Point p = new java.awt.Point(10, 10);
-
-        MainWindow ma;
         try {
-            ma = new MainWindow(d, p);
-            ma.restartKriptomer(false);
-        } catch (IOException | InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(AddProfile.class.getName()).log(Level.SEVERE, null, ex);
+
+            JComboBox<String> profili = this.kriptovaluta;
+
+            String iv = profili.getSelectedItem().toString(); // iv = izbrana valuta
+
+            switch (iv) { // još ena prevajalna tabela
+                case "Bitcoin":
+                    iv = "btc";
+                    break;
+                case "Ethereum":
+                    iv = "eth";
+                    break;
+                case "Bitcoin Cash":
+                    iv = "bch";
+                    break;
+                case "Ripple":
+                    iv = "xrp";
+                    break;
+                case "Litecoin":
+                    iv = "ltc";
+                    break;
+                case "Stellar Lumens":
+                    iv = "xlm";
+                    break;
+                case "OMG Network":
+                    iv = "omg";
+                    break;
+                case "0x":
+                    iv = "zrx";
+                    break;
+                default:
+                    iv = "Neznan: " + iv;
+            }
+
+            JSONParser jsonParser = new JSONParser();
+
+            FileReader reader = null;
+            try {
+                reader = new FileReader("kriptomer.conf");
+            } catch (FileNotFoundException e) {
+                System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+                usodnaNapaka u = new usodnaNapaka(e);
+            }
+
+            Object obj = jsonParser.parse(reader);
+            JSONObject saved = (JSONObject) obj;
+
+            JSONArray jProfili = (JSONArray) saved.get("profili");
+
+            int indeks_profila = Integer.parseInt(saved.get("default_profil").toString());
+            JSONObject izbran_profil = (JSONObject) jProfili.get(indeks_profila);
+
+            ime_profila.setText(izbran_profil.get("ime").toString());
+
+            JSONArray valute_profila = (JSONArray) izbran_profil.get("valute");
+
+            for (int i = 0; i < valute_profila.size(); i++) {
+                JSONObject p = (JSONObject) valute_profila.get(i); // p = posamična vnešena valuta/vrednost
+
+                if (iv.equals(p.get("valuta").toString())) {
+                    String iv_vlozek = p.get("vlozek").toString();
+                    String iv_kolicina = p.get("kolicina").toString();
+
+                    vlozek.setText(iv_vlozek);
+                    kolicina.setText(iv_kolicina);
+                }
+
+            }
+
+        } catch (IOException | ParseException ex) {
+            try {
+                Logger.getLogger(DeleteProfile.class.getName()).log(Level.SEVERE, null, ex);
+                usodnaNapaka u = new usodnaNapaka(ex);
+            } catch (ParseException ex1) {
+                Logger.getLogger(EditKripto.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
 
     }
-    
-    // Preverjamo integriteto vrednostih ki jih je vnesel uporabnik.
-    // Vse vrednosti morajo biti Double.
-    private boolean checkIntegrity(){
-        //JTextField kolicina = this.kolicina;
-        //JTextField vlozek = this.vlozek;
-        String kolicina_ = kolicina.getText(); // Najprej vnosa pretvorimo v String
-        String vlozek_ = vlozek.getText();
-        boolean indikator = true;
-        opozorila.setText("");
-        vlozek.setBackground(Color.white);
-        kolicina.setBackground(Color.white);
-        
-        if(vlozek_.contains("f") || vlozek_.contains("d")){ // Preverimo če vnost vsebuje "f" ali "d". Java še zmeraj lahko parsa vrednosti ki vsebujejo f ali d (ker je kao float in double) v double
-            vlozek_ += "abc"; //da v naslednjih pogojih namerno pade test, ki preverja če je vrednost double
-        }
-        if(kolicina_.contains("f") || kolicina_.contains("d")){
-            kolicina_ += "abc"; //da v naslednjih pogojih namerno pade test, ki preverja če je vrednost double
-        }
-        
-        shrani.setEnabled(true);
-        
-        try{ // Poiskus parsanja v Double. V kolikor pade vemo, da je vnos napačen
-            //shrani.setEnabled(true); // v kolikor je vnos vredu je gumb za shranjevanje odklenjen
-            Double v = Double.parseDouble(vlozek_);
-            System.out.println("INPUT OK (v)");
-        }
-        catch(NumberFormatException e){
-            vlozek.setBackground(Color.red);
-            shrani.setEnabled(false); // če je vnost napečn se shrani zaklene
-            if (vlozek_.equals("")){
-                //opozorila.setText("Prosim vnesite številčno vrednost v polje Vložek.");
-                System.out.println("NO INPUT (v)");
+
+    private void populirajTabelo() {
+
+        try {
+
+            JComboBox<String> profili = this.kriptovaluta;
+
+            JSONParser jsonParser = new JSONParser();
+
+            FileReader reader = null;
+            try {
+                reader = new FileReader("kriptomer.conf");
+            } catch (FileNotFoundException e) {
+                System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+                usodnaNapaka u = new usodnaNapaka(e);
             }
-            else{
-                //opozorila.setText("<html>Vnos ni veljaven v polju Vložek. <br/>Prosim vnesite številčno vrednost v polje Vložek.</html>");
-                System.out.println("INVALID INPUT (v)");
+
+            Object obj = jsonParser.parse(reader);
+            JSONObject saved = (JSONObject) obj;
+
+            JSONArray jProfili = (JSONArray) saved.get("profili");
+
+            int indeks_profila = Integer.parseInt(saved.get("default_profil").toString());
+            JSONObject izbran_profil = (JSONObject) jProfili.get(indeks_profila);
+
+            ime_profila.setText(izbran_profil.get("ime").toString());
+
+            JSONArray valute_profila = (JSONArray) izbran_profil.get("valute");
+
+            for (int i = 0; i < valute_profila.size(); i++) {
+                JSONObject p = (JSONObject) valute_profila.get(i); // p = posamična vnešena valuta/vrednost
+                String iv = p.get("valuta").toString(); // iv = ime valute
+
+                switch (iv) { // još ena prevajalna tabela
+                    case "btc":
+                        iv = "Bitcoin";
+                        break;
+                    case "eth":
+                        iv = "Ethereum";
+                        break;
+                    case "bch":
+                        iv = "Bitcoin Cash";
+                        break;
+                    case "xrp":
+                        iv = "Ripple";
+                        break;
+                    case "ltc":
+                        iv = "Litecoin";
+                        break;
+                    case "xlm":
+                        iv = "Stellar Lumens";
+                        break;
+                    case "omg":
+                        iv = "OMG Network";
+                        break;
+                    case "zrx":
+                        iv = "0x";
+                        break;
+                    default:
+                        iv = "Neznan: " + iv;
+                }
+
+                profili.addItem(iv);
             }
-            indikator = false;
-        }
-        
-        try{ // Enako kot zgoraj
-            //shrani.setEnabled(true);
-            Double k = Double.parseDouble(kolicina_);
-            System.out.println("INPUT OK (k)");
-        }
-        catch(NumberFormatException e){
-            kolicina.setBackground(Color.red);
-            shrani.setEnabled(false);
-            if (kolicina_.equals("")){
-                //opozorila.setText("Prosim vnesite številčno vrednost v polje Količina.");
-                System.out.println("NO INPUT (k)");
+
+        } catch (IOException | ParseException ex) {
+            try {
+                Logger.getLogger(DeleteProfile.class.getName()).log(Level.SEVERE, null, ex);
+                usodnaNapaka u = new usodnaNapaka(ex);
+            } catch (ParseException ex1) {
+                Logger.getLogger(EditKripto.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            else{
-                //opozorila.setText("<html>Vnos ni veljaven v polju Količina. <br/>Prosim vnesite številčno vrednost v polje Količina.</html>");
-                System.out.println("INVALID INPUT (k)");
-            }
-            indikator = false;
         }
-        
-        return indikator; // true -> ni napak; false -> napaka
-        
+
     }
-    
+
     private void shraniActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        if(!checkIntegrity()){ // preden shranimo preverimo integriteto
-            System.out.println("ne bo šlo"); // debug. returna v glavnem
+
+        if (!checkIntegrity()) {
             return;
-        } 
-        
+        }
+
         JSONParser jsonParser = new JSONParser(); // nov parser
 
         try {
@@ -412,18 +448,46 @@ public class AddKripto extends javax.swing.JFrame {
             JSONObject saved = (JSONObject) obj; // parsamo in shranimo vsebino datoteke v json object spremenljivko
 
             //System.out.println(saved); //debug
-            
             JSONArray profili = (JSONArray) saved.get("profili"); // pomikanje po shranjenih podatkih. pridobimo vse profile
             int index_profila = Integer.parseInt(saved.get("default_profil").toString()); // pridobimo index trenutnego izbranega profila
             JSONObject profil = (JSONObject) profili.get(index_profila); // pridobimo trenuten profil
             JSONArray valute = (JSONArray) profil.get("valute"); // pridobimo valute v tem profilu
-            
-            String izbrana_valuta = kriptovaluta.getItemAt(kriptovaluta.getSelectedIndex());
-            izbrana_valuta = izbrana_valuta.toLowerCase().substring(0, 3);
+
+            String iv = kriptovaluta.getItemAt(kriptovaluta.getSelectedIndex()); // iv = izbrana valuta
+
+            switch (iv) { // još ena prevajalna tabela
+                case "Bitcoin":
+                    iv = "btc";
+                    break;
+                case "Ethereum":
+                    iv = "eth";
+                    break;
+                case "Bitcoin Cash":
+                    iv = "bch";
+                    break;
+                case "Ripple":
+                    iv = "xrp";
+                    break;
+                case "Litecoin":
+                    iv = "ltc";
+                    break;
+                case "Stellar Lumens":
+                    iv = "xlm";
+                    break;
+                case "OMG Network":
+                    iv = "omg";
+                    break;
+                case "0x":
+                    iv = "zrx";
+                    break;
+                default:
+                    iv = "Neznan: " + iv;
+            }
             
             double izbran_vlozek = Double.parseDouble(vlozek.getText());
             double izbrana_kolicina = Double.parseDouble(kolicina.getText());
-               
+
+            /*
             for (int i = 0; i < valute.size(); i++){
                 JSONObject a = (JSONObject) valute.get(i);
                 if (izbrana_valuta.equals(a.get("valuta"))){
@@ -443,59 +507,162 @@ public class AddKripto extends javax.swing.JFrame {
                             " vnos podvojene kriptovalute in ne urediti obstoječo?", "Poziv: Podvojena kriptovauta", JOptionPane.YES_NO_OPTION);
                     if (reply == JOptionPane.NO_OPTION) 
                         return;
-                    */
+                    *\/
+                }
+            }*/
+            
+            /*
+            JSONObject nova_valuta = new JSONObject(); // ustvarimno novo valuto z itbranimi lastnostmi in vrednostmi
+            nova_valuta.put("valuta", iv);
+            nova_valuta.put("vlozek", izbran_vlozek);
+            nova_valuta.put("kolicina", izbrana_kolicina);
+            */
+
+            int index;
+            
+            for(index = 0; index < valute.size(); index++){
+                
+                JSONObject j = (JSONObject) valute.get(index);
+                if (j.get("valuta").toString().equals(iv)){
+                    break;
                 }
             }
             
-            JSONObject nova_valuta = new JSONObject(); // ustvarimno novo valuto z itbranimi lastnostmi in vrednostmi
-            nova_valuta.put("valuta", izbrana_valuta);
-            nova_valuta.put("vlozek", izbran_vlozek);
-            nova_valuta.put("kolicina", izbrana_kolicina);
-                        
-            valute.add(nova_valuta); // dodamo valuto v array valute
+            JSONObject valuta = (JSONObject) valute.get(index);
+            
+            valuta.put("vlozek", izbran_vlozek);
+            valuta.put("kolicina", izbrana_kolicina);
+            
+            valute.remove(index); // roundabout replace
+            valute.add(index, valuta);
             
             profil.replace("valute", valute); // zamenjema array valute z novim/posodobljenim
             profili.remove(index_profila); // odstranimo star profil
             profili.add(index_profila, profil); // na isto mesto postavimo naovega/posodobljenega
-            
+
             saved.put("profili", profili); // zamenjamo objekt profili z novim
-            
+
             FileWriter newfile = new FileWriter("kriptomer.conf"); // nov filewriter
             newfile.write(saved.toJSONString()); // pišemo na disk
             newfile.flush(); // tudi pišem. shranimo?
-            
+
             System.out.println("    ... finished"); // debug
-            
+
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(jPanel3); // pridobimo trenutni Jframe in ga zapremo
             frame.dispose();
-            
+
             this.mainWindow.restartKriptomer(true); // funkcija, da se kriptomer ponovno zažene (na istem mestu)
-            
+
             Thread.currentThread().stop(); // konec niti
-            
+
         } catch (java.io.FileNotFoundException e) {
-            System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
-            usodnaNapaka(e);
+            try {
+                System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+                usodnaNapaka u = new usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(EditKripto.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (java.io.IOException e) {
-            System.out.println(">> profile loading error\n    ... IO Excpetion");
-            usodnaNapaka(e);
+            try {
+                System.out.println(">> profile loading error\n    ... IO Excpetion");
+                usodnaNapaka u = new usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(EditKripto.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (ParseException e) {
-            System.out.println(">> profile loading error\n    ... Parsing Error. Corrupt File?");
-            usodnaNapaka(e);
+            try {
+                System.out.println(">> profile loading error\n    ... Parsing Error. Corrupt File?");
+                usodnaNapaka u = new usodnaNapaka(e);
+            } /*catch (NullPointerException e) {
+            System.out.println(">> profile loading error\n    ... Parsing Error. Illegal input?");
+            usodnaNapaka u = new usodnaNapaka(e);
+            }*/ catch (ParseException ex) {
+                Logger.getLogger(EditKripto.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+
     }
 
-    private void prekliciActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        
+    private void prekliciActionPerformed(java.awt.event.ActionEvent evt) {
+
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(jPanel3);
         frame.dispose();
         Thread.currentThread().stop();
-        
+
     }
+
+    private void kolicinaKeyReleased(java.awt.event.KeyEvent evt) {
+        checkIntegrity();
+    }
+
+    private void vlozekKeyReleased(java.awt.event.KeyEvent evt) {
+        checkIntegrity();
+    }
+
+    // Preverjamo integriteto vrednostih ki jih je vnesel uporabnik.
+    // Vse vrednosti morajo biti Double.
+    private boolean checkIntegrity() {
+        //JTextField kolicina = this.kolicina;
+        //JTextField vlozek = this.vlozek;
+        String kolicina_ = kolicina.getText(); // Najprej vnosa pretvorimo v String
+        String vlozek_ = vlozek.getText();
+        boolean indikator = true;
+        opozorila.setText("");
+        vlozek.setBackground(Color.white);
+        kolicina.setBackground(Color.white);
+
+        if (vlozek_.contains("f") || vlozek_.contains("d")) { // Preverimo če vnost vsebuje "f" ali "d". Java še zmeraj lahko parsa vrednosti ki vsebujejo f ali d (ker je kao float in double) v double
+            vlozek_ += "abc"; //da v naslednjih pogojih namerno pade test, ki preverja če je vrednost double
+        }
+        if (kolicina_.contains("f") || kolicina_.contains("d")) {
+            kolicina_ += "abc"; //da v naslednjih pogojih namerno pade test, ki preverja če je vrednost double
+        }
+
+        shrani.setEnabled(true);
+
+        try { // Poiskus parsanja v Double. V kolikor pade vemo, da je vnos napačen
+            //shrani.setEnabled(true); // v kolikor je vnos vredu je gumb za shranjevanje odklenjen
+            Double v = Double.parseDouble(vlozek_);
+            System.out.println("INPUT OK (v)");
+        } catch (NumberFormatException e) {
+            vlozek.setBackground(Color.red);
+            shrani.setEnabled(false); // če je vnost napečn se shrani zaklene
+            if (vlozek_.equals("")) {
+                //opozorila.setText("Prosim vnesite številčno vrednost v polje Vložek.");
+                System.out.println("NO INPUT (v)");
+            } else {
+                //opozorila.setText("<html>Vnos ni veljaven v polju Vložek. <br/>Prosim vnesite številčno vrednost v polje Vložek.</html>");
+                System.out.println("INVALID INPUT (v)");
+            }
+            indikator = false;
+        }
+
+        try { // Enako kot zgoraj
+
+            Double k = Double.parseDouble(kolicina_);
+            System.out.println("INPUT OK (k)");
+        } catch (NumberFormatException e) {
+            kolicina.setBackground(Color.red);
+            shrani.setEnabled(false);
+            if (kolicina_.equals("")) {
+                //opozorila.setText("Prosim vnesite številčno vrednost v polje Količina.");
+                System.out.println("NO INPUT (k)");
+            } else {
+                //opozorila.setText("<html>Vnos ni veljaven v polju Količina. <br/>Prosim vnesite številčno vrednost v polje Količina.</html>");
+                System.out.println("INVALID INPUT (k)");
+            }
+            indikator = false;
+        }
+
+        return indikator; // true -> ni napak; false -> napaka
+
+    }
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ime_kriptovaluta;
+    private javax.swing.JLabel ime_profila;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

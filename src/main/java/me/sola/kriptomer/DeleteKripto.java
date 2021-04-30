@@ -35,7 +35,7 @@ public class DeleteKripto extends javax.swing.JFrame {
      */
     MainWindow mainWindow;
 
-    public DeleteKripto(Object mainWindow) {
+    public DeleteKripto(Object mainWindow) throws ParseException {
         this.mainWindow = (MainWindow) mainWindow;
         initComponents();
         populirajTabelo();
@@ -154,7 +154,7 @@ public class DeleteKripto extends javax.swing.JFrame {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        ime_profila.setText("ime profila");
+        ime_profila.setText("Ime profila");
 
         jLabel2.setText("Urejate profil:");
 
@@ -216,7 +216,7 @@ public class DeleteKripto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void usodnaNapaka(Exception e) {
+    public void usodnaNapaka(Exception e) throws ParseException {
 
         String[] options = new String[]{"Ponovni zagon", "Izbriši konfiguracijsko datoteko", "Zapri program"};
         int response = JOptionPane.showOptionDialog(null, "Opa! Nekaj je šlo hudo narobe! Stabilnost seje se je porušila. "
@@ -266,7 +266,7 @@ public class DeleteKripto extends javax.swing.JFrame {
 
     }
 
-    private void populirajTabelo() {
+    private void populirajTabelo() throws ParseException {
 
         try {
 
@@ -380,14 +380,26 @@ public class DeleteKripto extends javax.swing.JFrame {
             Thread.currentThread().stop(); // konec niti
 
         } catch (java.io.FileNotFoundException e) {
-            System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
-            usodnaNapaka(e);
+            try {
+                System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+                usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(DeleteKripto.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (java.io.IOException e) {
-            System.out.println(">> profile loading error\n    ... IO Excpetion");
-            usodnaNapaka(e);
+            try {
+                System.out.println(">> profile loading error\n    ... IO Excpetion");
+                usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(DeleteKripto.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (ParseException e) {
-            System.out.println(">> profile loading error\n    ... Parsing Error. Corrupt File?");
-            usodnaNapaka(e);
+            try {
+                System.out.println(">> profile loading error\n    ... Parsing Error. Corrupt File?");
+                usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(DeleteKripto.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }

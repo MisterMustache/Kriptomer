@@ -234,9 +234,9 @@ public class DeleteProfile extends javax.swing.JFrame {
     
         try {
             
-            JComboBox<String> profili = this.profili;
+            JComboBox<String> profili_ = this.profili;
             
-            int selected = profili.getSelectedIndex();
+            int selected = profili_.getSelectedIndex();
             
             JSONParser jsonParser = new JSONParser();
             
@@ -256,8 +256,20 @@ public class DeleteProfile extends javax.swing.JFrame {
             jProfili.remove(selected);
             saved.put("profili", jProfili);
             
+            JSONArray profili2 = (JSONArray) saved.get("profili"); // pomikanje po shranjenih podatkih. pridobimo vse profile
+            
+            System.out.println("        -> " + profili2.size());
+            System.out.println("        -> " + selected + " " + (selected-1));
+            
+            if (profili2.size() == (selected)){
+                System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+                saved.put("default_profil", (selected-1));
+            }
+            
             FileWriter newfile = new FileWriter("kriptomer.conf");
 
+            System.out.println(saved.toString());
+            
             newfile.write(saved.toJSONString());
             newfile.flush();
             

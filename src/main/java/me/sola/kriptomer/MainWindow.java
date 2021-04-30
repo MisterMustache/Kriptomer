@@ -5,61 +5,45 @@
  */
 package me.sola.kriptomer;
 
+import com.google.gson.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.LayoutStyle;
-import javax.swing.SwingUtilities;
-import static me.sola.kriptomer.MainWindow.addValuteArray;
-
-import org.json.simple.*;
-//import org.json.simple.parser.JSONParser;
-//import org.json.simple.parser.ParseException;
-import com.google.gson.*;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.net.URL;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
-import org.json.simple.JSONObject;
+import javax.swing.SwingUtilities;
+//import static me.sola.kriptomer.MainWindow.addValuteArray;
+import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -72,15 +56,13 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Creates new form MainWindow
      */
-    
     private final javax.swing.ButtonGroup profili;
-    
+
 //    Dimension d = new java.awt.Dimension(1080, 750);
 //    Point p = new java.awt.Point(10, 10);
 //    MainWindow mainWindow = new MainWindow(d, p);
-    
     public MainWindow(Dimension d, Point p) throws IOException, InterruptedException, InvocationTargetException {
-        
+
         initComponents();
 
         // "Ročno" popravljeni atributi in GUI stvari (ker NetBeans nima podpore ali ne deluje pravilno)
@@ -92,9 +74,9 @@ public class MainWindow extends javax.swing.JFrame {
         profili = new javax.swing.ButtonGroup();
 
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel1);
-        Image ikona = ImageIO.read(RunKriptomer.class.getResource("resources/icons/ikona1.png"));
+        Image ikona = ImageIO.read(RunKriptomer.class.getResource("resources/icons/ikona1.png"));  
         frame.setIconImage(ikona);
-        
+
         frame.setSize(d);
         frame.setLocation(p);
 
@@ -109,11 +91,10 @@ public class MainWindow extends javax.swing.JFrame {
         odstraniValuto.setIcon(new ImageIcon(this.getClass().getResource("resources/menu_icons/delete_thumb.png")));
         urediValuto.setIcon(new ImageIcon(this.getClass().getResource("resources/menu_icons/edit_thumb.png")));
 
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             //addKriptoBox("t", 10.0, 10.0, "e");
         }
-        
-        
+
         //
         profileHandler();
 
@@ -121,6 +102,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         adaptSizeChange();
         //refreshHandler("");
+        refreshHoldingsReview();
     }
 
     /**
@@ -151,12 +133,29 @@ public class MainWindow extends javax.swing.JFrame {
         trend_icon = new javax.swing.JLabel();
         profit = new javax.swing.JLabel();
         panel2 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        ime_izbranega_profila = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        text_skupajVlozeno = new javax.swing.JLabel();
+        text_donosnost = new javax.swing.JLabel();
+        text_odTegaDobicek = new javax.swing.JLabel();
+        text_vrednostSredstev = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        skupajVlozeno = new javax.swing.JLabel();
+        donosnost = new javax.swing.JLabel();
+        odTegaDobicek = new javax.swing.JLabel();
+        vrednostSredstev = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         menu = new javax.swing.JMenuBar();
         portfelj = new javax.swing.JMenu();
         dodajValuto = new javax.swing.JMenuItem();
-        urediValuto = new javax.swing.JMenu();
-        test1 = new javax.swing.JMenuItem();
+        urediValuto = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         odstraniValuto = new javax.swing.JMenuItem();
         profil = new javax.swing.JMenu();
@@ -189,7 +188,7 @@ public class MainWindow extends javax.swing.JFrame {
         naslovnica.setPreferredSize(new java.awt.Dimension(1080, 60));
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabel3.setText("Kriptomer  -  Vloži že danes in mogoče boš bogat čez 15 let! ");
+        jLabel3.setText("Kriptomer  -  Za vaš pregled stanja vloženega kapitala v kriptovalute! ");
 
         jLabel4.setFont(new java.awt.Font("Dialog", 2, 8)); // NOI18N
         jLabel4.setText("\"Denar, če vam že ne bo prinesel sreče, vam bo vsaj pomagal, da boste nesrečni v lagodju.\" - Helen Gurley Brown ");
@@ -203,7 +202,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(naslovnicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4))
-                .addContainerGap(435, Short.MAX_VALUE))
+                .addContainerGap(285, Short.MAX_VALUE))
         );
         naslovnicaLayout.setVerticalGroup(
             naslovnicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,30 +356,219 @@ public class MainWindow extends javax.swing.JFrame {
         panel2.setAlignmentY(0.0F);
         panel2.setPreferredSize(new java.awt.Dimension(530, 720));
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("Grafi");
-        jLabel2.setAlignmentY(0.0F);
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel5.setText("Pregled stanja");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel5)
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setMinimumSize(new java.awt.Dimension(4, 4));
+
+        jPanel6.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        ime_izbranega_profila.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        ime_izbranega_profila.setText("Profil:");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ime_izbranega_profila)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ime_izbranega_profila, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+        );
+
+        text_skupajVlozeno.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        text_skupajVlozeno.setText("Skupaj vloženo (v denarni enoti)");
+
+        text_donosnost.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        text_donosnost.setText("Donosnost (v %)");
+
+        text_odTegaDobicek.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        text_odTegaDobicek.setText("Od tega dobiček (v denarni enoti)");
+
+        text_vrednostSredstev.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        text_vrednostSredstev.setText("Vrednost sredstev");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(text_skupajVlozeno)
+                    .addComponent(text_donosnost)
+                    .addComponent(text_odTegaDobicek)
+                    .addComponent(text_vrednostSredstev))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(text_skupajVlozeno, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(text_donosnost, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(text_odTegaDobicek, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(text_vrednostSredstev)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        skupajVlozeno.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        skupajVlozeno.setText("? €");
+
+        donosnost.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        donosnost.setText("? %");
+
+        odTegaDobicek.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        odTegaDobicek.setText("? €");
+
+        vrednostSredstev.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        vrednostSredstev.setText("? €");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(donosnost, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(vrednostSredstev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(odTegaDobicek, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(skupajVlozeno, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(skupajVlozeno, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(donosnost, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(odTegaDobicek, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(vrednostSredstev)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(263, 263, 263))
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jSeparator3)
+                        .addContainerGap())))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 491, Short.MAX_VALUE)
+        );
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel2.setText("Vlaganje v kriptovalute povzroča tveganje kapitala. Vlagajte odgovorno.");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addContainerGap(151, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
         panel2.setLayout(panel2Layout);
         panel2Layout.setHorizontalGroup(
             panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel2Layout.createSequentialGroup()
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(505, 505, 505))
+                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         panel2Layout.setVerticalGroup(
             panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(23, 23, 23))
+            .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
+                    .addGap(0, 695, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         getContentPane().add(panel2, java.awt.BorderLayout.CENTER);
 
         portfelj.setText("Portfelj");
+        portfelj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portfeljActionPerformed(evt);
+            }
+        });
 
         dodajValuto.setText("Dodaj novo valuto");
         dodajValuto.addActionListener(new java.awt.event.ActionListener() {
@@ -391,15 +579,11 @@ public class MainWindow extends javax.swing.JFrame {
         portfelj.add(dodajValuto);
 
         urediValuto.setText("Uredi obstoječo valuto");
-
-        test1.setText("placeholder");
-        test1.addActionListener(new java.awt.event.ActionListener() {
+        urediValuto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                test1ActionPerformed(evt);
+                urediValutoActionPerformed(evt);
             }
         });
-        urediValuto.add(test1);
-
         portfelj.add(urediValuto);
         portfelj.add(jSeparator1);
 
@@ -475,21 +659,21 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void usodnaNapaka(Exception e){
-        
-        JOptionPane optionPane = new JOptionPane("Opa! Nekaj je šlo hudo narobe! Stabilnost seje se je porušila. " +
-                "Kriptomer se bo interno znova zagnal! V primeru persistente napake ročno znova zaženite aplikacijo " + 
-                "oz. zavrzite konfiguracijsko datoteko.\n\n" + e.getMessage() + "\n\n" + e, JOptionPane.ERROR_MESSAGE);    
-            JDialog dialog = optionPane.createDialog("USODNA NAPAKA");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
-            
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, e);
-            
-            restartKriptomer(false);
-        
+    public void usodnaNapaka(Exception e) {
+
+        JOptionPane optionPane = new JOptionPane("Opa! Nekaj je šlo hudo narobe! Stabilnost seje se je porušila. "
+                + "Kriptomer se bo interno znova zagnal! V primeru persistente napake ročno znova zaženite aplikacijo "
+                + "oz. zavrzite konfiguracijsko datoteko.\n\n" + e.getMessage() + "\n\n" + e, JOptionPane.ERROR_MESSAGE);
+        JDialog dialog = optionPane.createDialog("USODNA NAPAKA");
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+
+        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, e);
+
+        restartKriptomer(false);
+
     }
-    
+
     private void profileHandler() throws IOException, InterruptedException, InvocationTargetException {
 
         JSONParser jsonParser = new JSONParser();
@@ -500,9 +684,8 @@ public class MainWindow extends javax.swing.JFrame {
             Object obj = jsonParser.parse(reader);
             JSONObject saved = (JSONObject) obj;
 
-            System.out.println(saved);
-            System.out.println("> nalaganje profila");
-
+            //System.out.println(saved);
+            //System.out.println("> nalaganje profila");
             int profil = Integer.parseInt(saved.get("default_profil").toString());
 
             selectProfile(profil, saved);
@@ -569,9 +752,9 @@ public class MainWindow extends javax.swing.JFrame {
             //We can write any JSONArray or JSONObject instance to the file
             newfile.write(bundle.toJSONString());
             newfile.flush();
-            System.out.println("    ... finished");
+            //System.out.println("    ... finished");
 
-            JOptionPane.showMessageDialog(null, "Zdravo naivni *ahem* nov uporabnik. Opazili smo, "
+            JOptionPane.showMessageDialog(null, "Zdravo uporabnik!\n Opazili smo, "
                     + "da ni konfiguracijske datoteke (kriptomer.conf) in smo za "
                     + "vas ustvarili novo z dvema privzetima profiloma. V kolikor "
                     + "že imate to datoteko jo zamenjajte po želji.");
@@ -588,22 +771,21 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void selectProfile(int profil_index, JSONObject json) throws InterruptedException, InvocationTargetException {
-        
+
         JRadioButtonMenuItem j;
-        for (int i = 0; i < spremeniProfil.getMenuComponents().length; i++){
+        for (int i = 0; i < spremeniProfil.getMenuComponents().length; i++) {
             j = (JRadioButtonMenuItem) spremeniProfil.getMenuComponent(i);
             j.setSelected(false);
             spremeniProfil.removeAll();
         }
 
         JSONArray profili = (JSONArray) json.get("profili");
-        
+
         JSONObject profil = null;
-        
-        try{
+
+        try {
             profil = (JSONObject) profili.get(profil_index);
-        }
-        catch(IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("> profile loading error\n    ... No profiles.");
             usodnaNapaka(e);
         }
@@ -634,22 +816,20 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         //System.out.println("Profil -> " + profil.get(profil_index));
-
     }
 
     private void addProfileToMenu(String ime_profila, int index, boolean selected) {
 
         //System.out.println("addProfileToMenu -> " + ime_profila + " " + index + " " + selected);
-        
         JRadioButtonMenuItem novProfil = new javax.swing.JRadioButtonMenuItem();
         novProfil.setSelected(selected);
         novProfil.setText(ime_profila);
         spremeniProfil.add(novProfil);
         profili.add(novProfil);
-        
+
         spremeniProfil.getMenuComponents();
         //System.out.println("velikost spremeniProfil " + spremeniProfil.getMenuComponents().length);
-        
+
         novProfil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -687,30 +867,29 @@ public class MainWindow extends javax.swing.JFrame {
             j = (JPanel) valuteBox.getComponent(i);
             valuteBox.remove(j);
         }
-        
-        //for(int i = 0; i < valuteBox.getCompon)
-        System.out.println("velikost valuteBox-a " + valuteBox.getComponents().length); 
 
+        //for(int i = 0; i < valuteBox.getCompon)
+        //System.out.println("velikost valuteBox-a " + valuteBox.getComponents().length); 
         restartKriptomer(true);
-         
+
     }
-    
-    private Point getWindowLocation(){
-        
+
+    private Point getWindowLocation() {
+
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel1);
         Point location = frame.getLocation();
-        
+
         return location;
-    
+
     }
-    
-    private Dimension getWindowSize(){
-        
+
+    private Dimension getWindowSize() {
+
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel1);
         Dimension size = frame.getSize();
-        
+
         return size;
-        
+
     }
 
     private void refreshHandler(String valuta, String fiat, Double investicija) {
@@ -781,76 +960,84 @@ public class MainWindow extends javax.swing.JFrame {
         restartKriptomer(false);
     }//GEN-LAST:event_restartActionPerformed
 
-    public void restartKriptomer(boolean keepProperties){
-        
+    public void restartKriptomer(boolean keepProperties) {
+
         try {
             System.out.println("X X X X X X\n> Kriptomer se ponovno zaganja\nX X X X X X");
-            
-            if(keepProperties){
+
+            if (keepProperties) {
                 Dimension d = getWindowSize();
                 Point p = getWindowLocation();
                 RunKriptomer.main(d, p);
-            }
-            else{
-                String[] arguments = new String[] {"123"};
+            } else {
+                String[] arguments = new String[]{"123"};
                 RunKriptomer.main(arguments);
             }
-            
+
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel1);
             frame.dispose();
             Thread.currentThread().stop();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     private void zacnimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zacnimoActionPerformed
-        System.out.println("> Odpiram pomoč");
+        //System.out.println("> Odpiram pomoč");
         JFrame f = new JFrame();
 
-        JLabel lab1 = new JLabel("Pomoči ni!");
+        JLabel labe1 = new JLabel("Pomoči ni!");
         f.setSize(new java.awt.Dimension(720, 480));
-        f.getContentPane().add(lab1);
+        f.getContentPane().add(labe1);
         f.repaint();
         f.revalidate();
 
         f.setVisible(true);
     }//GEN-LAST:event_zacnimoActionPerformed
 
-    private void test1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_test1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_test1ActionPerformed
-
     private void dodajProfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodajProfilActionPerformed
 
         AddProfile a = new AddProfile(this);
         a.setVisible(true);
-        
+
     }//GEN-LAST:event_dodajProfilActionPerformed
 
     private void odstraniProfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odstraniProfilActionPerformed
-        
+
         DeleteProfile r = new DeleteProfile(this);
         r.setVisible(true);
-        
+
     }//GEN-LAST:event_odstraniProfilActionPerformed
 
     private void dodajValutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodajValutoActionPerformed
-        
+
         AddKripto a = new AddKripto(this);
         a.setVisible(true);
     }//GEN-LAST:event_dodajValutoActionPerformed
 
     private void odstraniValutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odstraniValutoActionPerformed
-        
-        DeleteKripto d = new DeleteKripto(this);
-        d.setVisible(true);
-        
+
+        try {
+            DeleteKripto d = new DeleteKripto(this);
+            d.setVisible(true);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_odstraniValutoActionPerformed
+
+    private void urediValutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urediValutoActionPerformed
+        EditKripto e = new EditKripto(this);
+        e.setVisible(true);
+    }//GEN-LAST:event_urediValutoActionPerformed
+
+    private void portfeljActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portfeljActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_portfeljActionPerformed
 
     private void adaptSizeChange() {//java.awt.event.ComponentEvent evt){
         //JFrame f5 = (JFrame) SwingUtilities.getRootPane(panel1).getParent();
@@ -860,9 +1047,11 @@ public class MainWindow extends javax.swing.JFrame {
         int frame_h = topFrame.getBounds().height;
         int frame_w = topFrame.getBounds().width;
 
-        panel1.setPreferredSize(new Dimension((frame_w / 3) - 10, frame_h));
-        panel2.setPreferredSize(new Dimension(((frame_w / 3) * 2) - 10, frame_h));
-
+        //panel1.setPreferredSize(new Dimension((frame_w / 3) - 10, frame_h));
+        //panel2.setPreferredSize(new Dimension(((frame_w / 3) * 2) - 10, frame_h));
+        panel1.setPreferredSize(new Dimension(((frame_w / 5) * 2) - 10, frame_h));
+        panel2.setPreferredSize(new Dimension(((frame_w / 5) * 3) - 10, frame_h));
+        
         int scroll_h = valuteBox.getHeight();
         int scroll_w = valuteBox.getWidth();
         //valuteBox.setPreferredSize(valuteBox.getPreferredSize());
@@ -920,12 +1109,169 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
 
+    private void refreshHoldingsReview() throws IOException { // osveži Pregled stanja
+
+        /*
+         *  Začetne funkcije. 
+         *  Inicializacija JSON parserja in pridobitev osnovnih shranjenih podatkov   
+         */
+        JSONParser jsonParser = new JSONParser();
+
+        FileReader reader = null;
+        try {
+            reader = new FileReader("kriptomer.conf");
+        } catch (FileNotFoundException e) {
+            System.out.println("> profile loading error\n    ... FileNotFound Excpetion");
+            //usodnaNapaka u = new usodnaNapaka(e);
+        }
+
+        Object obj = null;
+        try {
+            obj = jsonParser.parse(reader);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JSONObject saved = (JSONObject) obj;
+
+        int index_profila = Integer.parseInt(saved.get("default_profil").toString()); // kateri profil je trenutno izbran
+        JSONArray jProfili = (JSONArray) saved.get("profili"); // vsi profili
+        JSONObject ip = (JSONObject) jProfili.get(index_profila); // ip = izbran profil
+
+        StringBuilder sb = new StringBuilder(); // Funkciji za končno zaokoroževanje številk
+        Formatter nf = new Formatter(sb, Locale.US);
+
+        /*
+         *  Ime izbranega profila
+         */
+        ime_izbranega_profila.setText("Profil: " + ip.get("ime"));
+
+        /*
+         *  Skupaj vloženo. 
+         *  Koliko denarnih enot je bili vloženih v kriptovalute izbranega profila
+         */
+        JSONArray valute_ip; // valute izbranega profila
+        valute_ip = (JSONArray) ip.get("valute");
+
+        Double skupajVlozeno_ip = 0.0; // skupaj vlozenega denarja (v fiat valuti) izbranega profila
+
+        for (int i = 0; i < valute_ip.size(); i++) {
+            JSONObject a = (JSONObject) valute_ip.get(i);
+            skupajVlozeno_ip += Double.parseDouble(a.get("vlozek").toString());
+        }
+
+        String fiat = "€";
+
+        String skupajVlozeno_ip_string = nf.format("%(,.2f", Double.parseDouble("" + skupajVlozeno_ip)) + "";
+
+        skupajVlozeno.setText(skupajVlozeno_ip_string + " " + fiat);
+
+        /*
+         *  Od tega dobiček
+         *  Po domače profit/izguba
+         */
+ /*
+            comp[0] : icon
+            comp[1] : amount (0.001)
+            comp[2] : dot
+            comp[3] : price
+            comp[4] : trend_icon
+            comp[5] : trend
+            comp[6] : name
+            comp[7] : profit
+            comp[8] : worth
+         */
+        Double donos_fiat = 0.0; // Donos samo da je v fiat valuti ker bo kasneje pretvorjen v %
+
+        boolean vseValuteSoNalozene = false;
+
+        try {
+            for (int i = 0; i < valute.length; i++) {
+                Component[] comp = valute_paneli[i].getComponents();
+                JLabel vrednost_jLabel = (JLabel) comp[8];
+                String vrednost_string = vrednost_jLabel.getText();
+                //System.out.println("a " + vrednost_string); 
+                vrednost_string = vrednost_string.replaceAll("[,$€£]", "");
+                //System.out.println("b " + vrednost_string);
+                donos_fiat += Double.parseDouble(vrednost_string);
+                //System.out.println("c " + donos_fiat);
+            }
+
+            donos_fiat -= skupajVlozeno_ip;
+            //System.out.println("d " + donos_fiat);
+
+            sb.setLength(0); // resetiranje StringBuilder-ja
+            String donos_fiat_string = nf.format("%(,.2f", Double.parseDouble("" + donos_fiat)) + "";
+
+            if (donos_fiat_string.contains("(")) {
+                donos_fiat_string = "-" + donos_fiat_string.replaceAll("[()]", "");
+            }
+
+            odTegaDobicek.setText(donos_fiat_string + " " + fiat);
+            vseValuteSoNalozene = true;
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException | NullPointerException e) {
+            //System.out.println(e);
+            odTegaDobicek.setText("preračunavam...");
+        } catch (Exception e) {
+            try {
+                usodnaNapaka u = new usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        /*
+         *  Donostnost
+         *  Po domače profit/izguba v procentih
+         */
+        try {
+            if (vseValuteSoNalozene) {
+                Double donosnost_ip = (donos_fiat * 100) / skupajVlozeno_ip; // formula za računanje procentualnih vrednosti AKA brezvezna matematika
+                donosnost.setText(String.format("%.2f", donosnost_ip) + " %"); // String.format je taka fina funkcija ki mi zaokroži tistih 150 decimalk na samo 2
+            } else {
+                donosnost.setText("preračunavam...");
+            }
+        } catch (Exception e) {
+            donosnost.setText("preračunavam...");
+        }
+
+        /*
+         *  Vrednost Sredstev
+         *  Kulk so vsi kovanci kriptovalut vredni v fiat valuti
+         */
+        Double vrednostSredstev_ip = 0.0; // vrednost sredstev izbranega profila
+
+        try {
+            for (int i = 0; i < valute.length; i++) {
+                Component[] comp = valute_paneli[i].getComponents();
+                JLabel vrednost_jLabel = (JLabel) comp[8];
+                String vrednost_string = vrednost_jLabel.getText();
+                //System.out.println("a " + vrednost_string); 
+                vrednost_string = vrednost_string.replaceAll("[,$€£]", "");
+                //System.out.println("b " + vrednost_string);
+                vrednostSredstev_ip += Double.parseDouble(vrednost_string);
+                //System.out.println("c " + donos_fiat);
+            }
+            
+            vrednostSredstev.setText(String.format("%.2f", vrednostSredstev_ip) + " " + fiat);
+            
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException | NullPointerException e) {
+            //System.out.println(e);
+            vrednostSredstev.setText("preračunavam...");
+        } catch (Exception e) {
+            try {
+                usodnaNapaka u = new usodnaNapaka(e);
+            } catch (ParseException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
 //    private boolean listsDone = false;
 //
 //    boolean getListsDone() {
 //        return listsDone;
 //    }
-    
     private void addKriptoBox(String cryptoCurrency, Double cryptoVlozek, Double cryptoAmount, String fiat) throws InterruptedException, InvocationTargetException {
 
 //        try {
@@ -933,22 +1279,20 @@ public class MainWindow extends javax.swing.JFrame {
 //        } catch (IOException ex) {
 //            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-        System.out.println("> adding new KriptoBox ...");
-
+        //System.out.println("> adding new KriptoBox ...");
         // Nov ExecutorService ki poskrbi da nit konča z nalogo preden nadaljujemo z 
         ExecutorService es = Executors.newCachedThreadPool();
         es.execute(new Runnable() {
 
             @Override
             public void run() {
-                System.out.println("    ...zaganjanje nove niti");
+                //System.out.println("    ...zaganjanje nove niti");
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
 
-                        System.out.println("    ...dodajanje nove valute");
-
+                        //System.out.println("    ...dodajanje nove valute");
                         // Prevajalna tabela
                         String cryptoName;
                         String base_path = "resources/thumbs/";
@@ -1085,11 +1429,10 @@ public class MainWindow extends javax.swing.JFrame {
                         kriptoBox.setMinimumSize(new java.awt.Dimension(100, 68));
 
                         valuteBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                        
-                        valuteBox.setSize(valuteBox.getPreferredSize().width, valuteBox.getPreferredSize().height);
-                        
-                        //kriptoBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
+                        valuteBox.setSize(valuteBox.getPreferredSize().width, valuteBox.getPreferredSize().height);
+
+                        //kriptoBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
                         profit.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
                         profit.setForeground(new java.awt.Color(160, 163, 165));
                         profit.setText("(+€-.--)");
@@ -1160,7 +1503,7 @@ public class MainWindow extends javax.swing.JFrame {
                         panel2.setAlignmentY(0.0F);
                         panel2.setPreferredSize(new java.awt.Dimension(530, 720));
 
-                        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                        /*jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
                         jLabel2.setText("Grafi");
                         jLabel2.setAlignmentY(0.0F);
 
@@ -1179,8 +1522,7 @@ public class MainWindow extends javax.swing.JFrame {
                                                 .addContainerGap()
                                                 .addComponent(jLabel2)
                                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        );
-
+                        );*/
                         valuteBox.setBackground(new Color(0xbb, 0xbb, 0xbb));
 
                         //Dodaj v parent box
@@ -1210,8 +1552,7 @@ public class MainWindow extends javax.swing.JFrame {
 
                         valute_paneli = addValuteArray(valute_paneli, kriptoBox);
 
-                        System.out.println("...ustvarjanje novega panela " + cryptoName + " koncano");
-
+                        //System.out.println("...ustvarjanje novega panela " + cryptoName + " koncano");
                         //System.out.println(valute_paneli[valute.length-1]);
                         //frame.revalidate();
                         //frame.repaint();
@@ -1246,7 +1587,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         // indeks števila valut
         valute = addToArray(valute, valute.length);
-        System.out.println("> Novo število valut: " + valute_paneli.length);
+        //System.out.println("> Novo število valut: " + valute_paneli.length);
 
         // nova valuta (ime)
         String cryptoName_ = cryptoCurrency + " ID: " + valute.length;
@@ -1254,8 +1595,7 @@ public class MainWindow extends javax.swing.JFrame {
         // zajemanje glavnega okna
         //final JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel1);
         // log
-        System.out.println("    ...dodan KriptoBox " + cryptoName_);
-
+        //System.out.println("    ...dodan KriptoBox " + cryptoName_);
         refreshHandler(cryptoCurrency, fiat, cryptoVlozek);
 
     }
@@ -1266,7 +1606,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void refreshDataOld() throws MalformedURLException, IOException, InterruptedException {
         while (true) {
             try {
-                System.out.println("> Osvezevanje podatkov... \n    ...stevilo valut nacrtovanih za osvezevanje: " + valute_paneli.length + "");
+                //System.out.println("> Osvezevanje podatkov... \n    ...stevilo valut nacrtovanih za osvezevanje: " + valute_paneli.length + "");
                 for (int i = 0; i < valute.length; i++) {
                     Component[] comp = valute_paneli[i].getComponents();
                     //System.out.println(comp[1]);
@@ -1311,7 +1651,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     // LEGACY END
     private void refreshData(String valuta, String fiat, Double investicija) throws URISyntaxException {
-        System.out.println("...Osvezevanje (Websocket)");
+        //System.out.println("...Osvezevanje (Websocket)");
         try {
             // open websocket
             final BitStampWebsocket clientEndPoint = new BitStampWebsocket(new URI("wss://ws.bitstamp.net"));
@@ -1333,10 +1673,10 @@ public class MainWindow extends javax.swing.JFrame {
                         StringBuilder sb = new StringBuilder();
                         Formatter nf = new Formatter(sb, Locale.US);
                         String output = "" + nf.format("%(,.2f", price.getAsDouble());
-                        System.out.println("> " + valuta + ": " + output);
+                        //System.out.println("> " + valuta + ": " + output);
                         updateData(price.getAsDouble() + "", valuta, investicija);
                     } catch (Exception e) {
-                        System.out.println("> Recieved data: not data\n    -> " + message);
+                        //System.out.println("> Recieved data: not data\n    -> " + message);
                         //throw new RuntimeException(e);
                     }
 
@@ -1532,6 +1872,11 @@ public class MainWindow extends javax.swing.JFrame {
                 prev_prices[i] = Double.parseDouble(price);
             }
         }
+        try {
+            refreshHoldingsReview(); // na konc te zmede še posodobi hitri pregled stanja
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 
@@ -1539,19 +1884,31 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel amount;
     private javax.swing.JMenuItem dodajProfil;
     private javax.swing.JMenuItem dodajValuto;
+    private javax.swing.JLabel donosnost;
     private javax.swing.JLabel dot;
     private javax.swing.JLabel icon;
+    private javax.swing.JLabel ime_izbranega_profila;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPanel kriptoBox;
     private javax.swing.JMenuBar menu;
     private javax.swing.JLabel name;
     private javax.swing.JPanel naslovnica;
+    private javax.swing.JLabel odTegaDobicek;
     private javax.swing.JMenuItem odstraniProfil;
     private javax.swing.JMenuItem odstraniValuto;
     private javax.swing.JMenuItem osveziConfig;
@@ -1564,13 +1921,18 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel profit;
     private javax.swing.JMenuItem restart;
     private javax.swing.JMenu seja;
+    private javax.swing.JLabel skupajVlozeno;
     private javax.swing.JMenu spremeniProfil;
-    private javax.swing.JMenuItem test1;
+    private javax.swing.JLabel text_donosnost;
+    private javax.swing.JLabel text_odTegaDobicek;
+    private javax.swing.JLabel text_skupajVlozeno;
+    private javax.swing.JLabel text_vrednostSredstev;
     private javax.swing.JLabel trend;
     private javax.swing.JLabel trend_icon;
-    private javax.swing.JMenu urediValuto;
+    private javax.swing.JMenuItem urediValuto;
     private javax.swing.JPanel valuteBox;
     private javax.swing.JScrollPane valuteBoxScroll;
+    private javax.swing.JLabel vrednostSredstev;
     private javax.swing.JLabel worth;
     private javax.swing.JMenuItem zacnimo;
     // End of variables declaration//GEN-END:variables
