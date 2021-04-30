@@ -17,7 +17,7 @@ import javax.swing.JLabel;
  */
 public class RunKriptomer {
     
-    static boolean dev = true;
+    static boolean dev = false;
     
     public static void main(Dimension d, Point p) throws InterruptedException, IOException{
     
